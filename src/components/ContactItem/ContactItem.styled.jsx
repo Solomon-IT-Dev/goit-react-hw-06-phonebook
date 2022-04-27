@@ -22,7 +22,8 @@ export const ContactItemNum = styled.a`
   text-decoration: none;
   transition: all 250ms ease-in-out;
 
-  :hover, :focus {
+  :hover,
+  :focus {
     color: #39b0ff;
   }
 `;
@@ -37,7 +38,8 @@ export const DeleteBtn = styled.button`
   border: none;
   transition: all 250ms ease-in-out;
 
-  :hover, :focus {
-    color: #39b0ff;
+  :hover,
+  :focus {
+    color: #ff3939;
   }
 `;

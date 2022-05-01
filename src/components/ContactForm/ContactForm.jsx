@@ -1,11 +1,25 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+import { getContactsItems, addContact } from 'redux/contacts/slice';
 import { nanoid } from 'nanoid';
-import { FormWrapper, ContactSubmitForm, FormInputLabel, FormInput, FormSubmitBtn } from './ContactForm.styled';
+import { showInfoMessage, showSuccessMessage } from 'utils/notifications';
+import {
+  FormWrapper,
+  ContactSubmitForm,
+  FormInputLabel,
+  FormInput,
+  FormSubmitBtn,
+} from './ContactForm.styled';
 
-export default function ContactForm({ onSubmit }) {
+export default function ContactForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+
+  const contacts = useSelector(getContactsItems);
+  const dispatch = useDispatch();
+
+  const nameInputId = nanoid();
+  const numberInputId = nanoid();
 
   const onNameChange = evt => {
     setName(evt.currentTarget.value);
@@ -22,16 +36,35 @@ export default function ContactForm({ onSubmit }) {
 
   const onContactFormSubmit = evt => {
     evt.preventDefault();
+
     const contact = {
+      id: nanoid(),
       name,
-      number
+      number,
     };
-    onSubmit(contact);
+
+    const normalizedName = name.toLowerCase();
+
+    if (
+      contacts.find(
+        contact =>
+          contact.name.toLowerCase() === normalizedName &&
+          contact.number === number
+      )
+    ) {
+      showInfoMessage('This contact is already in your phonebook');
+      return;
+    }
+
+    if (contacts.find(contact => contact.number === number)) {
+      showInfoMessage('This phone number is already in your phonebook');
+      return;
+    }
+
+    dispatch(addContact(contact));
+    showSuccessMessage('New contact has been added in your phonebook');
     formReset();
   };
-
-  const nameInputId = nanoid();
-  const numberInputId = nanoid();
 
   return (
     <FormWrapper>
@@ -66,10 +99,6 @@ export default function ContactForm({ onSubmit }) {
         </FormInputLabel>
         <FormSubmitBtn type="submit">Add contact</FormSubmitBtn>
       </ContactSubmitForm>
-    </FormWrapper> 
+    </FormWrapper>
   );
-};
-
-ContactForm.propTypes = {
-    onSubmit: PropTypes.func.isRequired,
-};
+}

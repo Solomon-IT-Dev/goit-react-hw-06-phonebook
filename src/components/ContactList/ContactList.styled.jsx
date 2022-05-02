@@ -35,6 +35,11 @@ export const ListElement = styled.li`
   }
 `;
 
-export const NotificationText = styled.p`
+export const NoMatchesText = styled.p`
+  margin: 20px 0;
+  font-size: 18px;
+`;
+
+export const NoContactsText = styled.p`
   font-size: 18px;
 `;

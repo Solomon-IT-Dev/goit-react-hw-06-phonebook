@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { nanoid } from '@reduxjs/toolkit';
 import { getContactsItems, addContact } from 'redux/contacts/slice';
-import { nanoid } from 'nanoid';
 import { showInfoMessage, showSuccessMessage } from 'utils/notifications';
 import {
   FormWrapper,
@@ -37,18 +37,10 @@ export default function ContactForm() {
   const onContactFormSubmit = evt => {
     evt.preventDefault();
 
-    const contact = {
-      id: nanoid(),
-      name,
-      number,
-    };
-
-    const normalizedName = name.toLowerCase();
-
     if (
       contacts.find(
         contact =>
-          contact.name.toLowerCase() === normalizedName &&
+          contact.name.toLowerCase() === name.toLowerCase() &&
           contact.number === number
       )
     ) {
@@ -61,7 +53,7 @@ export default function ContactForm() {
       return;
     }
 
-    dispatch(addContact(contact));
+    dispatch(addContact({ name, number }));
     showSuccessMessage('New contact has been added in your phonebook');
     formReset();
   };

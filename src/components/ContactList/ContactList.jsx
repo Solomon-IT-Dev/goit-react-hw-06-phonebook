@@ -8,7 +8,8 @@ import {
   TotalContactsNum,
   PhonebookList,
   ListElement,
-  NotificationText,
+  NoMatchesText,
+  NoContactsText,
 } from './ContactList.styled';
 
 export default function ContactList() {
@@ -38,19 +39,23 @@ export default function ContactList() {
         <TotalContactsNum>{totalContactsAmount}</TotalContactsNum>
       </TotalContactsText>
       <PhonebookList>
-        {visibleContacts.map(({ id, name, number }) => (
-          <ListElement key={id}>
-            <ContactItem
-              id={id}
-              name={name}
-              number={number}
-              onDelete={onDeleteContact}
-            />
-          </ListElement>
-        ))}
+        {visibleContacts.length ? (
+          visibleContacts.map(({ id, name, number }) => (
+            <ListElement key={id}>
+              <ContactItem
+                id={id}
+                name={name}
+                number={number}
+                onDelete={onDeleteContact}
+              />
+            </ListElement>
+          ))
+        ) : (
+          <NoMatchesText>No contact matches</NoMatchesText>
+        )}
       </PhonebookList>
     </>
   ) : (
-    <NotificationText>There are no contacts in your phonebook</NotificationText>
+    <NoContactsText>There are no contacts in your phonebook</NoContactsText>
   );
 }

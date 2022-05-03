@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getContactsItems, removeContact } from 'redux/contacts/slice';
 import { getFilterValue } from 'redux/filter/slice';
@@ -19,12 +20,19 @@ export default function ContactList() {
 
   const totalContactsAmount = contacts.length;
 
-  const getVisibleContacts = () => {
-    const normalizedFilter = filterValue.toLowerCase().trim();
-    return contacts
-      .filter(contact => contact.name.toLowerCase().includes(normalizedFilter))
-      .sort(sortContactsByName);
-  };
+  const getVisibleContacts = useMemo(
+    () => () => {
+      const normalizedFilter = filterValue.toLowerCase().trim();
+      return contacts
+        .filter(
+          contact =>
+            contact.name.toLowerCase().includes(normalizedFilter) ||
+            contact.number.includes(normalizedFilter)
+        )
+        .sort(sortContactsByName);
+    },
+    [contacts, filterValue]
+  );
 
   const visibleContacts = getVisibleContacts();
 
